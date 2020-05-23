@@ -89,13 +89,15 @@ class MakeTemplates(object):
         os.makedirs(output_dir)
 
         # first render the report
-        self.reporter.render_template({
+        result = self.reporter.render_template({
             'template_file': os.path.join(self.scratch, 'templates', 'edge_data_tsv_file.tt'),
             'template_data_json': json.dumps({
                 'file_path': 'edge_data.tsv',
             }),
             'output_file': os.path.join(output_dir, 'report.html')
         })
+
+        print(result)
 
         # copy any supporting files into the directory
         # these might also include images, JS, or CSS files needed to render the page,

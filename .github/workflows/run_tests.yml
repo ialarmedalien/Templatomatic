@@ -18,10 +18,10 @@ jobs:
       shell: bash
       env:
         KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN }}
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         GITHUB_ACTIONS_CI: 1
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         docker pull ialarmedalien/kb-sdk
         docker run ialarmedalien/kb-sdk genscript > $GITHUB_WORKSPACE/kb-sdk
         chmod 755 $GITHUB_WORKSPACE/kb-sdk
-        $GITHUB_WORKSPACE/kb-sdk test
+        $GITHUB_WORKSPACE/kb-sdk test -p COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }}
