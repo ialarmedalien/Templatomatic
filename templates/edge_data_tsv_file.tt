@@ -1,0 +1,52 @@
+[%
+
+    page_title         = 'Edge Data Table';
+    data_file          = file_path; # supplied by template_data_json
+    data_file_format   = 'tsv';
+
+    PROCESS 'views/inc/macros.tt';
+    PROCESS 'views/inc/js.tt';
+    WRAPPER 'views/inc/page_wrapper.tt';
+
+    table_id = 'single_table_on_page-table';
+
+    page_content = [
+      {
+        name    => 'Edge Data',
+        name_lc => 'edge_data',
+        content => 'table',
+        table_config => {
+          id                => table_id,
+          for_datatables_js => 1,
+        },
+      }
+    ];
+
+    tabbed_layout( page_content = page_content );
+%]
+<script>
+  "use strict";
+  $(document).ready(function () {
+    // remap the column names in the file to appropriate column headers
+    const cols = [
+      { data: 'node1',              title: 'Source node' },
+      { data: 'node2',              title: 'Target node' },
+      { data: 'edge',               title: 'Edge weight' },
+      { data: 'edge_descrip',       title: 'Edge description' },
+      { data: 'layer_descrip',      title: 'Layer description' },
+    ];
+
+[%
+
+    PROCESS default_table_conf;
+    PROCESS default_data_load;
+
+%]
+  })
+</script>
+[%
+    END; # end wrapper
+
+%]
+
+
