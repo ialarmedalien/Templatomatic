@@ -9,9 +9,10 @@ from Templatomatic.TemplatomaticServer import MethodContext
 from Templatomatic.authclient import KBaseAuth as _KBaseAuth
 
 from installed_clients.WorkspaceClient import Workspace
+from installed_clients.DataFileUtilClient import DataFileUtil
 
 
-class TemplatomaticTest(unittest.TestCase):
+class Templatomatic_server_test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -29,22 +30,25 @@ class TemplatomaticTest(unittest.TestCase):
         # WARNING: don't call any logging methods on the context object,
         # it'll result in a NoneType error
         cls.ctx = MethodContext(None)
-        cls.ctx.update({'token': token,
-                        'user_id': user_id,
-                        'provenance': [
-                            {'service': 'Templatomatic',
-                             'method': 'please_never_use_it_in_production',
-                             'method_params': []
-                             }],
-                        'authenticated': 1})
-        cls.wsURL = cls.cfg['workspace-url']
-        cls.wsClient = Workspace(cls.wsURL)
-        cls.serviceImpl = Templatomatic(cls.cfg)
+        cls.ctx.update({
+            'token': token,
+            'user_id': user_id,
+            'provenance': [{
+                'service': 'Templatomatic',
+                'method': 'please_never_use_it_in_production',
+                'method_params': []
+            }],
+            'authenticated': 1
+        })
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
+        cls.wsURL = cls.cfg['workspace-url']
+        cls.wsClient = Workspace(cls.wsURL)
+        cls.dfu = DataFileUtil(cls.callback_url)
+        cls.serviceImpl = Templatomatic(cls.cfg)
         suffix = int(time.time() * 1000)
-        cls.wsName = "test_ContigFilter_" + str(suffix)
-        ret = cls.wsClient.create_workspace({'workspace': cls.wsName})  # noqa
+        cls.wsName = "test_Templatomatic_" + str(suffix)
+        cls.wsClient.create_workspace({'workspace': cls.wsName})
 
     @classmethod
     def tearDownClass(cls):
@@ -53,7 +57,39 @@ class TemplatomaticTest(unittest.TestCase):
             print('Test workspace was deleted')
 
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
-    def test_your_method(self):
+
+    def check_created_report(self, result):
+        """ basic checks on a created report
+        Args:
+          result: output from report creation call
+        Return:
+          object data from created report
+        """
+        self.assertEqual(self.serviceImpl.status(self.ctx)[0]['state'], 'OK')
+        self.assertTrue(len(result[0]['ref']))
+        self.assertTrue(len(result[0]['name']))
+        obj = self.dfu.get_objects({'object_refs': [result[0]['ref']]})
+        return obj['data'][0]['data']
+
+    def check_extended_result(self, result, link_name, file_names):
+        """
+        Test utility: check the file upload results for an extended report
+        Args:
+          result - result dictionary from running .create_extended_report
+          link_name - one of "html_links" or "file_links"
+          file_names - names of the files for us to check against
+        Returns:
+            obj - report object created
+        """
+        obj = self.check_created_report(result)
+        file_links = obj[link_name]
+        self.assertEqual(len(file_links), len(file_names))
+        # Test that all the filenames listed in the report object map correctly
+        saved_names = set([str(f['name']) for f in file_links])
+        self.assertEqual(saved_names, set(file_names))
+        return obj
+
+    def test_run_Templatomatic(self):
         # Prepare test objects in workspace if needed using
         # self.getWsClient().save_objects({'workspace': self.getWsName(),
         #                                  'objects': []})
@@ -63,5 +99,9 @@ class TemplatomaticTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_Templatomatic(self.ctx, {'workspace_name': self.wsName,
-                                                             'parameter_1': 'Hello World!'})
+
+        result = self.serviceImpl.run_Templatomatic(self.ctx, {
+            'workspace_name': self.wsName,
+        })
+        self.check_extended_result(result, 'html_links', ['report.html', 'standalone_report.html'])
+

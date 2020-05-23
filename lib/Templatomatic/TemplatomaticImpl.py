@@ -2,7 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
-import MakeTemplates
+from Templatomatic.MakeTemplates import MakeTemplates
 #END_HEADER
 
 
@@ -22,8 +22,8 @@ class Templatomatic:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = ""
-    GIT_COMMIT_HASH = ""
+    GIT_URL = "https://github.com/ialarmedalien/Templatomatic.git"
+    GIT_COMMIT_HASH = "f67a87248d06d51afaa6647e0e1c2e9eb6b8727d"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER

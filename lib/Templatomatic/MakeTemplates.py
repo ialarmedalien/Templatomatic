@@ -5,7 +5,7 @@ import json
 from shutil import copy, copytree
 from installed_clients.KBaseReportClient import KBaseReport
 
-class MakeTemplates:
+class MakeTemplates(object):
     '''
     Module Name:
     MakeTemplates
@@ -49,7 +49,7 @@ class MakeTemplates:
         return self.reporter.create_extended_report({
             'html_links': html_links,
             'direct_html_link_index': 0,
-            'report_object_name': 'Report in Directory',
+            'report_object_name': 'My_Cool_Report',
             'workspace_name': params['workspace_name']
         })
 
@@ -74,7 +74,7 @@ class MakeTemplates:
             'name': 'standalone_report.html',
             'template': {
                 'template_file': os.path.join(self.scratch, 'templates', 'edge_data_array.tt'),
-                'template_data_json': json.loads(tmpl_data),
+                'template_data_json': json.dumps(tmpl_data),
             },
             'description': 'HTML report with data from controller',
         }
@@ -91,7 +91,7 @@ class MakeTemplates:
         # first render the report
         self.reporter.render_template({
             'template_file': os.path.join(self.scratch, 'templates', 'edge_data_tsv_file.tt'),
-            'template_data_json': json.loads({
+            'template_data_json': json.dumps({
                 'file_path': 'edge_data.tsv',
             }),
             'output_file': os.path.join(output_dir, 'report.html')

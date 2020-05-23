@@ -8,6 +8,7 @@ SCRIPTS_DIR = scripts
 TEST_DIR = test
 LBIN_DIR = bin
 WORK_DIR = /kb/module/work/tmp
+APPDIR = /kb/module
 EXECUTABLE_SCRIPT_NAME = run_$(SERVICE_CAPS)_async_job.sh
 STARTUP_SCRIPT_NAME = start_server.sh
 TEST_SCRIPT_NAME = run_tests.sh
@@ -16,7 +17,7 @@ TEST_SCRIPT_NAME = run_tests.sh
 
 default: compile
 
-all: compile build build-startup-script build-executable-script build-test-script
+all: compile build build-startup-script build-executable-script
 
 compile:
 	kb-sdk compile $(SPEC_FILE) \
@@ -55,12 +56,16 @@ build-test-script:
 	echo 'base_dir=$$(cd $$script_dir && cd .. && pwd);' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'export KB_DEPLOYMENT_CONFIG=$$script_dir/../deploy.cfg' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'export KB_AUTH_TOKEN=`cat /kb/module/work/token`' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'export APPDIR=/kb/module' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'echo "Removing temp files..."' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'rm -rf $(WORK_DIR)/*' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'echo "Finished removing temp files."' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
-	echo 'export PYTHONPATH=$$script_dir/../$(LIB_DIR):$$PATH:$$PYTHONPATH' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'cd $(APPDIR)' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'python -m compileall lib/ test/' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'export PYTHONPATH=$(APPDIR)/$(LIB_DIR):$$PYTHONPATH' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'cd $$script_dir/../$(TEST_DIR)' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
-	echo 'python -m nose --with-coverage --cover-package=$(SERVICE_CAPS) --cover-html --cover-html-dir=/kb/module/work/test_coverage --nocapture  --nologcapture .' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'PYTHONPATH=$(APPDIR)/lib/:$(APPDIR)/test/:$$PYTHONPATH coverage run --source=$(APPDIR)/lib/$(SERVICE_CAPS) -m unittest -v Templatomatic_server_test.py' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'coverage html' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	chmod +x $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 
 test:

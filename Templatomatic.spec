@@ -9,7 +9,7 @@ module Templatomatic {
     } ReportResults;
 
     /*
-        This example function accepts any number of parameters and returns results in a KBaseReport
+        This example function may look simple and generic, but it does something super cool involving templates and reports. Run it and see!
     */
     funcdef run_Templatomatic(mapping<string,UnspecifiedObject> params) returns (ReportResults output) authentication required;
 

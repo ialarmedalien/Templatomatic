@@ -2,7 +2,7 @@ module-name:
     Templatomatic
 
 module-description:
-    A KBase module
+    A KBase module demonstrating the use of templates in KBase Reports
 
 service-language:
     python

@@ -1,10 +1,10 @@
 #
 # define display information
 #
-name: Method Name Here
+name: Run Templatomatic
 
 tooltip: |
-    Perform some kind of method
+    Run templatomatic and generate an extended report with templates!
 
 screenshots: []
 
@@ -16,9 +16,9 @@ icon: icon.png
 suggestions:
     apps:
         related:
-            [app1, app2]
+            [KBaseReport]
         next:
-            [app3, app4]
+            [KBaseReport]
 
 #
 # Configure the display and description of parameters
