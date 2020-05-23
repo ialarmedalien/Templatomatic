@@ -18,3 +18,4 @@ export PYTHONPATH=/kb/module/lib:$PYTHONPATH
 PYTHONPATH=/kb/module/lib/:/kb/module/test/:$PYTHONPATH coverage run --source=/kb/module/lib/Templatomatic -m unittest -v Templatomatic_server_test
 echo 'Finished testing. Getting coverage data...'
 coverage report
+coveralls

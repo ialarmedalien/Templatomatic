@@ -25,4 +25,3 @@ jobs:
         docker run ialarmedalien/kb-sdk genscript > $GITHUB_WORKSPACE/kb-sdk
         chmod 755 $GITHUB_WORKSPACE/kb-sdk
         $GITHUB_WORKSPACE/kb-sdk test
-        coveralls
