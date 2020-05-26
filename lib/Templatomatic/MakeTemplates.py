@@ -19,8 +19,8 @@ class MakeTemplates(object):
         self.scratch = config['scratch']
         self.appdir = config['appdir']
         logging.basicConfig(
-            format='%(created)s %(levelname)s: %(message)s',
-            level=logging.INFO
+            format='%(name)s %(levelname)s %(message)s',
+            level=logging.DEBUG
         )
         self.reporter = KBaseReport(self.callback_url, service_ver='dev')
 
@@ -70,7 +70,7 @@ class MakeTemplates(object):
             'parsed_data_from_file': lines[1:],
         }
 
-        return {
+        result = {
             'name': 'standalone_report.html',
             'template': {
                 'template_file': os.path.join(self.scratch, 'templates', 'edge_data_array.tt'),
@@ -78,6 +78,10 @@ class MakeTemplates(object):
             },
             'description': 'HTML report with data from controller',
         }
+
+        self.logger.debug({'extended_report': result})
+
+        return result
 
     def report_in_directory(self):
         '''
@@ -97,7 +101,7 @@ class MakeTemplates(object):
             'output_file': os.path.join(output_dir, 'report.html')
         })
 
-        print(result)
+        self.logger.debug({'render_template': result})
 
         # copy any supporting files into the directory
         # these might also include images, JS, or CSS files needed to render the page,
