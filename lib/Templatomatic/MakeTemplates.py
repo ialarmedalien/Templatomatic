@@ -81,7 +81,7 @@ class MakeTemplates(LogMixin, object):
             'parsed_data_from_file': lines[1:],
         }
 
-        result = {
+        return {
             'name': 'standalone_report.html',
             'template': {
                 'template_file': os.path.join(self.scratch, 'templates', 'edge_data_array.tt'),
@@ -89,10 +89,6 @@ class MakeTemplates(LogMixin, object):
             },
             'description': 'HTML report with data from controller',
         }
-
-        self.logger.debug({'extended_report': result})
-
-        return result
 
     def report_in_directory(self):
         '''
