@@ -5,7 +5,16 @@ import json
 from shutil import copy, copytree
 from installed_clients.KBaseReportClient import KBaseReport
 
-class MakeTemplates(object):
+
+class LogMixin(object):
+    @property
+    def logger(self):
+        # name = '.'.join([__name__, self.__class__.__name__])
+        class_name = self.__class__.__name__
+        return logging.getLogger('kb_Msuite.' + class_name)
+
+
+class MakeTemplates(LogMixin, object):
     '''
     Module Name:
     MakeTemplates
@@ -23,7 +32,6 @@ class MakeTemplates(object):
             level=logging.DEBUG
         )
         self.reporter = KBaseReport(self.callback_url, service_ver='dev')
-
 
     def make_templates(self, params):
         """
@@ -117,4 +125,3 @@ class MakeTemplates(object):
             'name': 'report.html',
             'description': 'HTML report in directory with supporting files',
         }
-
