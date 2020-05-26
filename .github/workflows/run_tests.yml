@@ -1,14 +1,11 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  [push, pull_request]
 
 jobs:
 
-  install_kbsdk_and_test:
+  install_kbsdk_and_test_appdev:
     runs-on: ubuntu-latest
     steps:
     - name: checkout git repo
@@ -17,11 +14,29 @@ jobs:
     - name: pull and run docker image
       shell: bash
       env:
-        KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN }}
-        GITHUB_ACTIONS_CI: 1
+        KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN_APPDEV }}
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         docker pull ialarmedalien/kb-sdk
         docker run ialarmedalien/kb-sdk genscript > $GITHUB_WORKSPACE/kb-sdk
         chmod 755 $GITHUB_WORKSPACE/kb-sdk
         $GITHUB_WORKSPACE/kb-sdk test -p COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }}
+
+  install_kbsdk_and_test_ci:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout git repo
+      uses: actions/checkout@v2
+
+    - name: pull and run docker image
+      shell: bash
+      env:
+        KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN_CI }}
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        mkdir -p test_local
+        cp ci.test.cfg test_local/test.cfg
+        docker pull ialarmedalien/kb-sdk
+        docker run ialarmedalien/kb-sdk genscript > $GITHUB_WORKSPACE/kb-sdk
+        chmod 755 $GITHUB_WORKSPACE/kb-sdk
+        $GITHUB_WORKSPACE/kb-sdk test
