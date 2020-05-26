@@ -35,8 +35,10 @@ class Templatomatic:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
         self.templater = MakeTemplates(config)
-        logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
-                            level=logging.INFO)
+        logging.basicConfig(
+            format='%(name)s %(levelname)s %(message)s',
+            level=logging.DEBUG
+        )
         #END_CONSTRUCTOR
         pass
 
