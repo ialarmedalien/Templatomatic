@@ -11,7 +11,7 @@ class LogMixin(object):
     def logger(self):
         # name = '.'.join([__name__, self.__class__.__name__])
         class_name = self.__class__.__name__
-        return logging.getLogger('kb_Msuite.' + class_name)
+        return logging.getLogger('Templatomatic.' + class_name)
 
 
 class MakeTemplates(LogMixin, object):
@@ -54,12 +54,15 @@ class MakeTemplates(LogMixin, object):
             self.standalone_report_from_tsv(),
         ]
 
-        return self.reporter.create_extended_report({
+        result = self.reporter.create_extended_report({
             'html_links': html_links,
             'direct_html_link_index': 0,
             'report_object_name': 'My_Cool_Report',
             'workspace_name': params['workspace_name']
         })
+
+        self.logger.debug({'combined report': result})
+        return result
 
     def standalone_report_from_tsv(self):
         '''
