@@ -66,9 +66,9 @@ class Templatomatic_server_test(unittest.TestCase):
           object data from created report
         """
         self.assertEqual(self.serviceImpl.status(self.ctx)[0]['state'], 'OK')
-        self.assertTrue(len(result[0]['ref']))
-        self.assertTrue(len(result[0]['name']))
-        obj = self.dfu.get_objects({'object_refs': [result[0]['ref']]})
+        self.assertTrue(len(result[0]['report_ref']))
+        self.assertTrue(len(result[0]['report_name']))
+        obj = self.dfu.get_objects({'object_refs': [result[0]['report_ref']]})
         return obj['data'][0]['data']
 
     def check_extended_result(self, result, link_name, file_names):

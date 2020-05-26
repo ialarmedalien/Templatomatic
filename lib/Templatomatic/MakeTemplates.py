@@ -43,7 +43,7 @@ class MakeTemplates(LogMixin, object):
         # ctx is the context object
         # return variables are: output
 
-        self.logger.info({'KBaseReport version': reporter._service_ver})
+        self.logger.info({'KBaseReport version': self.reporter._service_ver})
 
         # copy the templates into 'scratch', where they can be accessed by KBaseReport
         copytree(
