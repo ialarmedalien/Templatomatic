@@ -4,8 +4,8 @@ A KBase module: Templatomatic
 
 module Templatomatic {
     typedef structure {
-        string name;
-        string ref;
+        string report_name;
+        string report_ref;
     } ReportResults;
 
     /*

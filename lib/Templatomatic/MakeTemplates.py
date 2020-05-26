@@ -62,7 +62,10 @@ class MakeTemplates(LogMixin, object):
         })
 
         self.logger.debug({'combined report': result})
-        return result
+        return {
+            'report_name': result['name'],
+            'report_ref':  result['ref'],
+        }
 
     def standalone_report_from_tsv(self):
         '''
