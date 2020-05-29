@@ -34,15 +34,9 @@ class MakeTemplates(LogMixin, object):
         self.reporter = KBaseReport(self.callback_url, service_ver='dev')
 
     def make_templates(self, params):
-        """
-        This example function accepts any number of parameters and returns results in a KBaseReport
-        :param params: instance of mapping from String to unspecified object
-        :returns: instance of type "ReportResults" -> structure: parameter
-           "report_name" of String, parameter "report_ref" of String
-        """
-        # ctx is the context object
-        # return variables are: output
-
+        '''
+        create HTML reports from templates using a variety of methods
+        '''
         self.logger.info({'KBaseReport version': self.reporter._service_ver})
 
         # copy the templates into 'scratch', where they can be accessed by KBaseReport
@@ -52,8 +46,10 @@ class MakeTemplates(LogMixin, object):
         )
 
         html_links = [
-            self.report_in_directory(),
-            self.standalone_report_from_tsv(),
+            self.create_report_in_directory('json'),
+            self.create_report_in_directory('tsv'),
+            self.standalone_report_array_of_arrays(),
+            self.standalone_report_array_of_objects(),
         ]
 
         result = self.reporter.create_extended_report({
@@ -69,9 +65,9 @@ class MakeTemplates(LogMixin, object):
             'report_ref':  result['ref'],
         }
 
-    def standalone_report_from_tsv(self):
+    def standalone_report_array_of_arrays(self):
         '''
-        render a report from some standalone data
+        render a report with an array of arrays as table data
         '''
 
         source_file = os.path.join(self.appdir, 'data', 'edge_data.tsv')
@@ -83,11 +79,11 @@ class MakeTemplates(LogMixin, object):
         tmpl_data = {
             # lines[0] is the header
             # the rest of the lines are the data points
-            'parsed_data_from_file': lines[1:],
+            'data_array_of_arrays': lines[1:],
         }
 
         return {
-            'name': 'standalone_report.html',
+            'name': 'standalone_aoa_report.html',
             'template': {
                 'template_file': os.path.join(self.scratch, 'templates', 'edge_data_array.tt'),
                 'template_data_json': json.dumps(tmpl_data),
@@ -95,37 +91,65 @@ class MakeTemplates(LogMixin, object):
             'description': 'HTML report with data from controller',
         }
 
-    def report_in_directory(self):
+    def standalone_report_array_of_objects(self):
         '''
-        render a report in a directory with supporting files
+        render a report with an array of objects (dicts) as table data
         '''
 
-        # copy the templates into the scratch directory
-        output_dir = os.path.join(self.scratch, 'output_dir')
+        source_file = os.path.join(self.appdir, 'data', 'edge_data.json')
+
+        # read in JSON data
+        with open(source_file, 'r') as read_fh:
+            lines = read_fh.read().rstrip()
+
+        tmpl_data = {
+            'data_array_of_objects': json.loads(lines),
+        }
+
+        return {
+            'name': 'standalone_aoo_report.html',
+            'template': {
+                'template_file': os.path.join(self.scratch, 'templates', 'edge_data_object.tt'),
+                'template_data_json': json.dumps(tmpl_data),
+            },
+            'description': 'HTML report with data from controller',
+        }
+
+    def create_report_in_directory(self, file_format):
+        '''
+        Create a report that runs off a data file in format `file_format`
+        
+        The report HTML page must be rendered first, and then the rendered page supplied, along with the data file and any other supporting files, as a directory to KBaseReport. This allows HTML links to files in that directory to work correctly.
+        '''
+        output_dir = os.path.join(self.scratch, file_format + '_output_dir')
+        report_file = file_format + '_report.html'
+        data_file = 'edge_data.' + file_format
+        template_file = 'edge_data_' + file_format + '_file.tt'
+        report_description = 'HTML report, ' + file_format + ' data source, in directory with supporting files'
+
+        # create the output directory
         os.makedirs(output_dir)
 
-        # first render the report
+        # render the report template
         result = self.reporter.render_template({
-            'template_file': os.path.join(self.scratch, 'templates', 'edge_data_tsv_file.tt'),
+            'template_file': os.path.join(self.scratch, 'templates', template_file),
             'template_data_json': json.dumps({
-                'file_path': 'edge_data.tsv',
+                'file_path': data_file,
             }),
-            'output_file': os.path.join(output_dir, 'report.html')
+            'output_file': os.path.join(output_dir, report_file)
         })
-
-        self.logger.debug({'render_template': result})
 
         # copy any supporting files into the directory
         # these might also include images, JS, or CSS files needed to render the page,
         # as well as data files
         copy(
-            os.path.join(self.appdir, 'data', 'edge_data.tsv'),
-            os.path.join(output_dir, 'edge_data.tsv')
+            os.path.join(self.appdir, 'data', data_file),
+            os.path.join(output_dir, data_file)
         )
 
         # add the directory containing the report and supporting files to html_links
         return {
             'path': output_dir,
-            'name': 'report.html',
-            'description': 'HTML report in directory with supporting files',
+            'name': report_file,
+            'description': report_description,
         }

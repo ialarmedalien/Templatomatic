@@ -1,6 +1,6 @@
 [%
 
-    page_title        = 'Edge Data Table';
+    page_title        = 'Edge Data Table, from an array of arrays';
 
     PROCESS 'views/inc/macros.tt';
     PROCESS 'views/inc/js.tt';
@@ -21,11 +21,9 @@
     ];
 
     tabbed_layout( page_content = page_content );
-%]
-<script>
-  "use strict";
-  $(document).ready(function () {
-    // remap the column names in the file to appropriate column headers
+
+    WRAPPER js_wrapper %]
+    // supply the column names
     const cols = [
       { title: 'Source node' },
       { title: 'Target node' },
@@ -33,21 +31,22 @@
       { title: 'Edge description' },
       { title: 'Layer description' },
     ];
-
 [%
-    # include the standard table config
-    PROCESS default_table_conf;
-
-    # add in the array of arrays of table data
+    # add in the array of objects to be used as table data
+    # by default Template Toolkit outputs them in a JavaScript/Python-like syntax
 %]
-    const dataSet = [% parsed_data_from_file %];
-    tableConfig.data = dataSet;
-    $('#[% table_id %]').DataTable(tableConfig);
-
-  })
-</script>
+    const dataSet = [% data_array_of_arrays %];
 [%
-    END; # end wrapper
+    # record the name of the variable storing the data so that it is set correctly when
+    # default_table_conf is run
+
+      data_js_variable = 'dataSet';
+
+      # include the standard table config
+      PROCESS default_table_conf;
+      PROCESS default_data_load;
+    END; # end JS wrapper
+  END; # end page wrapper
 
 %]
 

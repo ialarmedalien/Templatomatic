@@ -1,8 +1,8 @@
 [%
 
-  page_title         = 'Edge Data Table, from a TSV file';
+  page_title         = 'Edge Data Table, from a JSON file';
   data_file          = file_path; # supplied by template_data_json
-  data_file_format   = 'tsv';
+  data_file_format   = 'json';
 
   PROCESS 'views/inc/macros.tt';
   PROCESS 'views/inc/js.tt';
@@ -24,7 +24,7 @@
 
     tabbed_layout( page_content = page_content );
 
-    WRAPPER js_wrapper; %]
+    WRAPPER js_wrapper %]
     // remap the column names in the file to appropriate column headers
     const cols = [
       { data: 'node1',              title: 'Source node' },
@@ -36,8 +36,9 @@
 [%
       PROCESS default_table_conf;
       PROCESS default_data_load;
-    END; # end js_wrapper
+    END; # end JS wrapper
   END; # end page wrapper
+
 %]
 
 

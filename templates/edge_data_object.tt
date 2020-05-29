@@ -1,8 +1,6 @@
 [%
 
-  page_title         = 'Edge Data Table, from a TSV file';
-  data_file          = file_path; # supplied by template_data_json
-  data_file_format   = 'tsv';
+  page_title        = 'Edge Data Table, from an array of objects';
 
   PROCESS 'views/inc/macros.tt';
   PROCESS 'views/inc/js.tt';
@@ -34,10 +32,22 @@
       { data: 'layer_descrip',      title: 'Layer description' },
     ];
 [%
+      # add in the array of objects to be used as table data
+      # by default Template Toolkit outputs them in a JavaScript/Python-like syntax
+%]
+    const dataSet = [% data_array_of_objects %];
+[%
+      # record the name of the variable storing the data so that it is set correctly when
+      # default_table_conf is run
+
+      data_js_variable = 'dataSet';
+
+      # include the standard table config
       PROCESS default_table_conf;
       PROCESS default_data_load;
-    END; # end js_wrapper
+    END; # end JS wrapper
   END; # end page wrapper
+
 %]
 
 

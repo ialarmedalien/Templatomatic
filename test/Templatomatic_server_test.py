@@ -90,18 +90,14 @@ class Templatomatic_server_test(unittest.TestCase):
         return obj
 
     def test_run_Templatomatic(self):
-        # Prepare test objects in workspace if needed using
-        # self.getWsClient().save_objects({'workspace': self.getWsName(),
-        #                                  'objects': []})
-        #
-        # Run your method by
-        # ret = self.getImpl().your_method(self.getContext(), parameters...)
-        #
-        # Check returned data with
-        # self.assertEqual(ret[...], ...) or other unittest methods
 
         result = self.serviceImpl.run_Templatomatic(self.ctx, {
             'workspace_name': self.wsName,
         })
-        self.check_extended_result(result, 'html_links', ['report.html', 'standalone_report.html'])
+        self.check_extended_result(result, 'html_links', [
+            'tsv_report.html',
+            'json_report.html',
+            'standalone_aoa_report.html',
+            'standalone_aoo_report.html',
+        ])
 
