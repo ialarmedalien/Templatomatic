@@ -4,9 +4,9 @@
 name: Run Templatomatic
 
 tooltip: |
-    Run templatomatic and generate an extended report with templates!
+    Run Templatomatic and generate an extended report with templates!
 
-screenshots: []
+screenshots: [Templatomatic.png]
 
 icon: icon.png
 
@@ -24,13 +24,13 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    parameter_1 :
+    report_type :
         ui-name : |
-            First parameter
+            Report type
         short-hint : |
-            The first parameter
+            Select the report type
         long-hint  : |
-            The first parameter that needs to be entered to drive the method. This might be the first of many.
+            Select the type of report to generate
 
 description : |
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar efficitur felis, quis tincidunt sem congue at. Vivamus ornare feugiat faucibus. Fusce tincidunt mattis nunc, nec varius purus convallis quis. Nulla facilisi. In at magna dolor. Suspendisse sit amet felis at arcu auctor dapibus vitae pharetra dui. Nam semper mi quis tortor fermentum mollis. Donec a arcu pharetra, rutrum dolor vitae, rutrum mauris. Donec ornare fringilla sagittis. Nam laoreet est in elementum malesuada. Vestibulum id mi eget urna hendrerit feugiat. Donec et ultrices nulla. Phasellus diam eros, dapibus at tempus nec, semper vel ante.</p>

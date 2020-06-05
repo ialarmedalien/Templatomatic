@@ -4,6 +4,7 @@ import time
 import unittest
 from configparser import ConfigParser
 
+from Templatomatic.MakeTemplates import LogMixin
 from Templatomatic.TemplatomaticImpl import Templatomatic
 from Templatomatic.TemplatomaticServer import MethodContext
 from Templatomatic.authclient import KBaseAuth as _KBaseAuth
@@ -12,7 +13,7 @@ from installed_clients.WorkspaceClient import Workspace
 from installed_clients.DataFileUtilClient import DataFileUtil
 
 
-class Templatomatic_server_test(unittest.TestCase):
+class Templatomatic_server_test(LogMixin, unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -23,10 +24,12 @@ class Templatomatic_server_test(unittest.TestCase):
         config.read(config_file)
         for nameval in config.items('Templatomatic'):
             cls.cfg[nameval[0]] = nameval[1]
+
         # Getting username from Auth profile for token
         authServiceUrl = cls.cfg['auth-service-url']
         auth_client = _KBaseAuth(authServiceUrl)
         user_id = auth_client.get_user(token)
+
         # WARNING: don't call any logging methods on the context object,
         # it'll result in a NoneType error
         cls.ctx = MethodContext(None)
@@ -48,15 +51,14 @@ class Templatomatic_server_test(unittest.TestCase):
         cls.serviceImpl = Templatomatic(cls.cfg)
         suffix = int(time.time() * 1000)
         cls.wsName = "test_Templatomatic_" + str(suffix)
-        cls.wsClient.create_workspace({'workspace': cls.wsName})
+        cls.ws_info = cls.wsClient.create_workspace({'workspace': cls.wsName})
+        cls.ws_id = cls.ws_info[6]
 
     @classmethod
     def tearDownClass(cls):
         if hasattr(cls, 'wsName'):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
             print('Test workspace was deleted')
-
-    # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
 
     def check_created_report(self, result):
         """ basic checks on a created report
@@ -92,7 +94,9 @@ class Templatomatic_server_test(unittest.TestCase):
     def test_run_Templatomatic(self):
 
         result = self.serviceImpl.run_Templatomatic(self.ctx, {
+            'workspace_id': self.ws_id,
             'workspace_name': self.wsName,
+            'report_type': 'single_table',
         })
         self.check_extended_result(result, 'html_links', [
             'tsv_report.html',
@@ -100,4 +104,3 @@ class Templatomatic_server_test(unittest.TestCase):
             'standalone_aoa_report.html',
             'standalone_aoo_report.html',
         ])
-

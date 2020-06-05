@@ -9,7 +9,7 @@
 
     page_content = [
       {
-        name    => [% table_tab_title %],
+        name    => table_tab_title,
         name_lc => 'table_tab',
         content => 'table',
         table_config => {
