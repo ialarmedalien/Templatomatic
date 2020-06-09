@@ -57,7 +57,6 @@ class Templatomatic:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_Templatomatic
-
         self.logger.info({'ctx': ctx, 'params': params})
         output = self.templater.make_templates(params)
 

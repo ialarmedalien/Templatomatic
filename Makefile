@@ -64,7 +64,7 @@ build-test-script:
 	echo 'python -m compileall lib/ test/' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'export PYTHONPATH=$(APPDIR)/$(LIB_DIR):$$PYTHONPATH' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'cd $$script_dir/../$(TEST_DIR)' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
-	echo 'PYTHONPATH=$(APPDIR)/lib/:$(APPDIR)/test/:$$PYTHONPATH coverage run --source=$(APPDIR)/lib/$(SERVICE_CAPS) -m unittest -v Templatomatic_server_test.py' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
+	echo 'PYTHONPATH=$(APPDIR)/lib/:$(APPDIR)/test/:$$PYTHONPATH coverage run --source=$(APPDIR)/lib/$(SERVICE_CAPS) -m unittest -v TemplatomaticTestSuite' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	echo 'coverage html' >> $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 	chmod +x $(TEST_DIR)/$(TEST_SCRIPT_NAME)
 
