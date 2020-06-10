@@ -15,6 +15,6 @@ echo "Finished removing temp files."
 cd /kb/module
 python -m compileall lib/ test/
 export PYTHONPATH=/kb/module/lib:$PYTHONPATH
-PYTHONPATH=/kb/module/lib/:/kb/module/test/:$PYTHONPATH coverage run --source=/kb/module/lib/Templatomatic -m unittest -v Templatomatic_server_test
+PYTHONPATH=/kb/module/lib/:/kb/module/test/:$PYTHONPATH coverage run --source=/kb/module/lib/Templatomatic -m unittest -v TemplatomaticTestSuite
 echo 'Finished testing. Getting coverage data...'
 coverage report

@@ -23,7 +23,7 @@ class Templatomatic:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/ialarmedalien/Templatomatic.git"
-    GIT_COMMIT_HASH = "f67a87248d06d51afaa6647e0e1c2e9eb6b8727d"
+    GIT_COMMIT_HASH = "48e77e56392ac4bab9c8ffa605e99f145c7f574b"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -35,25 +35,31 @@ class Templatomatic:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
         self.templater = MakeTemplates(config)
+
         logging.basicConfig(
             format='%(name)s %(levelname)s %(message)s',
             level=logging.DEBUG
         )
+        self.logger = logging.getLogger('Templatomatic.' + self.__class__.__name__)
+
         #END_CONSTRUCTOR
         pass
 
 
     def run_Templatomatic(self, ctx, params):
         """
-        This example function accepts any number of parameters and returns results in a KBaseReport
-        :param params: instance of mapping from String to unspecified object
+        This example function may look simple and generic, but it does something super cool involving templates and reports. Run it and see!
+        :param params: instance of type "TemplatomaticInput" -> structure:
+           parameter "report_type" of String
         :returns: instance of type "ReportResults" -> structure: parameter
-           "report_name" of String, parameter "report_ref" of String
+           "name" of String, parameter "ref" of String
         """
         # ctx is the context object
         # return variables are: output
         #BEGIN run_Templatomatic
+        self.logger.info({'ctx': ctx, 'params': params})
         output = self.templater.make_templates(params)
+
         #END run_Templatomatic
 
         # At some point might do deeper type checking...

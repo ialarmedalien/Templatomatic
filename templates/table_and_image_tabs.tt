@@ -1,0 +1,44 @@
+[%
+  table_id           = 'single_table_on_page-table';
+  include_datatables = 1;
+
+  PROCESS 'views/inc/macros.tt';
+  PROCESS 'views/inc/js.tt';
+  WRAPPER 'views/inc/page_wrapper.tt';
+
+    page_content = [
+      {
+        name    => table_tab_title,
+        name_lc => 'table_tab',
+        content => 'table',
+        table_config => {
+          id                => table_id,
+          for_datatables_js => 1,
+        },
+      },
+      {
+        name    => image_tab_title,
+        name_lc => 'image_tab',
+        content => 'image',
+        config  => {
+          # absolute or relative link to the image
+          img_src => image_config_img_src,
+
+          # alt text - a brief description of the image
+          img_alt => image_config_img_alt,
+
+          # caption for the image; this should be written in HTML
+          caption => image_config_caption,
+        },
+      },
+    ];
+
+    tabbed_layout;
+
+    # add in the default code for loading the data in the template variable 'data_array', or,
+    # if data_file and data_file_format are defined, from an external CSV / TSV / JSON file
+    PROCESS default_datatables_js;
+
+  END; # end page wrapper
+
+%]

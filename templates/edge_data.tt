@@ -1,0 +1,30 @@
+[%
+  table_id            = 'single_table_on_page-table';
+  include_datatables  = 1;
+  template_debug_view = 1;
+
+  PROCESS 'views/inc/macros.tt';
+  PROCESS 'views/inc/js.tt';
+  WRAPPER 'views/inc/page_wrapper.tt';
+
+    page_content = [
+      {
+        name    => table_tab_title,
+        name_lc => 'table_tab',
+        content => 'table',
+        table_config => {
+          id                => table_id,
+          for_datatables_js => 1,
+        },
+      },
+    ];
+
+    tabbed_layout;
+
+    # add in the default code for loading the data in the template variable 'data_array', or,
+    # if data_file and data_file_format are defined, from an external CSV / TSV / JSON file
+    PROCESS default_datatables_js;
+
+  END; # end page wrapper
+
+%]

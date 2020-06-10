@@ -9,16 +9,22 @@
         "input": null,
         "output": null
     },
-    "parameters": [ 
+    "parameters": [
         {
-            "id": "parameter_1",
-            "optional": true,
+            "id": "report_type",
+            "optional": false,
             "advanced": false,
             "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ ]
+            "default_values": [ "single_table" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [{
+                    "display": "Single table",
+                    "value": "single_table"
+                }, {
+                    "display": "Table and image",
+                    "value": "table_and_image"
+                }]
             }
         }
     ],
@@ -35,8 +41,8 @@
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
                 },{
-                    "input_parameter": "parameter_1",
-                    "target_property": "parameter_1"
+                    "input_parameter": "report_type",
+                    "target_property": "report_type"
                 }
             ],
             "output_mapping": [
