@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: kb-sdk test
 
 on:
   [push, pull_request]
@@ -15,12 +15,11 @@ jobs:
       shell: bash
       env:
         KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN_APPDEV }}
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         docker pull ialarmedalien/kb-sdk
         docker run ialarmedalien/kb-sdk genscript > $GITHUB_WORKSPACE/kb-sdk
         chmod 755 $GITHUB_WORKSPACE/kb-sdk
-        $GITHUB_WORKSPACE/kb-sdk test -p COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }}
+        $GITHUB_WORKSPACE/kb-sdk test
 
   install_kbsdk_and_test_ci:
     runs-on: ubuntu-latest
@@ -32,7 +31,6 @@ jobs:
       shell: bash
       env:
         KBASE_TEST_TOKEN: ${{ secrets.KBASE_TEST_TOKEN_CI }}
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         mkdir -p test_local
         cp ci.test.cfg test_local/test.cfg
