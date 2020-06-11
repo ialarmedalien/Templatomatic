@@ -1,6 +1,7 @@
 [%
   table_id           = 'single_table_on_page-table';
   include_datatables = 1;
+  template_debug_view = 1;
 
   PROCESS 'views/inc/macros.tt';
   PROCESS 'views/inc/js.tt';
