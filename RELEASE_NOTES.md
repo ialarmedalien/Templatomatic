@@ -9,3 +9,6 @@
 -----
 * Added methods to make templates with a single table, and templates with a table and an image file.
 
+0.0.2
+-----
+* Minor logging update.
