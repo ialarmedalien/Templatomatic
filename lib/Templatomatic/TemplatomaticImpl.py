@@ -8,13 +8,13 @@ from Templatomatic.MakeTemplates import MakeTemplates
 
 
 class Templatomatic:
-    """
+    '''
     Module Name:
     Templatomatic
 
     Module Description:
     A KBase module: Templatomatic
-    """
+    '''
 
     ######## WARNING FOR GEVENT USERS ####### noqa
     # Since asynchronous IO can lead to methods - even the same method -
@@ -24,7 +24,7 @@ class Templatomatic:
     ######################################### noqa
     VERSION = "0.0.2"
     GIT_URL = "https://github.com/ialarmedalien/Templatomatic.git"
-    GIT_COMMIT_HASH = "48e77e56392ac4bab9c8ffa605e99f145c7f574b"
+    GIT_COMMIT_HASH = "31a63e2f6879d6da0ff8be8e6ad3b1eeb600504d"
 
     # BEGIN_CLASS_HEADER
     # END_CLASS_HEADER
@@ -45,13 +45,15 @@ class Templatomatic:
         # END_CONSTRUCTOR
         pass
 
+
     def run_Templatomatic(self, ctx, params):
         """
         This example function may look simple and generic, but it does something super cool involving templates and reports. Run it and see!
         :param params: instance of type "TemplatomaticInput" -> structure:
-           parameter "report_type" of String
+           parameter "report_type" of String, parameter "workspace_name" of
+           String, parameter "workspace_id" of Long
         :returns: instance of type "ReportResults" -> structure: parameter
-           "name" of String, parameter "ref" of String
+           "report_name" of String, parameter "report_ref" of String
         """
         # ctx is the context object
         # return variables are: output
@@ -63,10 +65,9 @@ class Templatomatic:
 
         # At some point might do deeper type checking...
         if not isinstance(output, dict):
-            raise ValueError(
-                "Method run_Templatomatic return value "
-                + "output is not type dict as required."
-            )
+            raise ValueError('Method run_Templatomatic ' +
+                             'return value output ' +
+                             'is not type dict as required.')
         # return the results
         return [output]
 
